@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=0" />
+  <title>UHF</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+    }
+    /*
+      This holds the YT player, which is beneath everything else until ready.
+    */
+    #videoContainer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+    }
+    /*
+      When our player is ready, it is brought to the top of the
+      layout stack, but made invisible. Now clicks on screen will go
+      to the YT player directly, and we can skirt some iOS limitations
+    */
+    .ready #videoContainer {
+      z-index: 9;
+      opacity: 0;
+    }
+    .playing #videoContainer {
+      z-index: 9;
+      pointer-events: none;
+    }
+    #videoContainer iframe {
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* 100% sizing is set inside js */
+      width: 100%;
+      height: 100%;
+    }
+    #playblocker, #thumb {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+    }
+    #playblocker {
+      background: url("static.gif");
+    }
+    #thumb {
+      /*background-image: url(http://img.youtube.com/vi/mJ8tq8AnNis/hqdefault.jpg);*/
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 0.3;
+      z-index: 1;
+      /*-webkit-filter: blur(10px);
+      -moz-filter: blur(10px);
+      -o-filter: blur(10px);
+      -ms-filter: blur(10px);
+      filter: blur(10px);*/
+    }
+    /*.playing #thumb {
+      display: none;
+    }*/
+    #playbuttonContainer {
+      margin: auto;
+      position: absolute;
+      top: 50%;
+      margin-top: -50px;
+      left: 50%;
+      margin-left: -50px;
+      text-align: center;
+      z-index: 5;
+      display: none;
+    }
+    .ready #playbuttonContainer {
+      display: block;
+    }
+    #playbuttonText {
+      text-transform: uppercase;
+      margin: 0;
+      font-family: sans-serif;
+      font-variant: small-caps;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body class="notloaded">
+  <div id="playblocker">
+    <div id="thumb"></div>
+    <div id="playbuttonContainer">
+      <img src="8ball.png" id="playbutton" width="100">
+      <p id="playbuttonText">Start</p>
+    </div>
+  </div>
+  <div id="videoContainer"></div>
+  <script id="index" src="index.js"></script>
+  <script>
+    // This has to be here because of the dumbass Youtube API + Safari
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  </script>
+</body>
+</html>
